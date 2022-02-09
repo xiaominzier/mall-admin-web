@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import store from '@/store';
 import Home from '../views/layout/Home.vue';
 import Login from '../views/layout/Login.vue';
 
@@ -31,4 +32,14 @@ const router = new VueRouter({
   routes,
 });
 
+// 利用路由拦截进行登陆状态校验（必须先登录，才能进入功能页）
+router.beforeEach((to, from, next) => {
+  if (to.path !== '/login') {
+    if (store.state.user.appkey && store.state.user.username && store.state.user.role) {
+      return next();
+    }
+    return next('/login');
+  }
+  return next();
+});
 export default router;

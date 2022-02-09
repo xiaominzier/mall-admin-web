@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { getUserCookie, setCookie, removeUserCookie } from '@/utils/userCookie';
 
 Vue.use(Vuex);
 
@@ -8,12 +9,7 @@ export default new Vuex.Store({
     // 用于切换菜单的闭合状态  false代表不闭合  true代表闭合(也可以通过父组件传子组件的方式，但是太麻烦，每个组件都要添加)
     collapsed: false,
     // 用户信息
-    user: {
-      username: '',
-      appkey: '',
-      role: '',
-      email: '',
-    },
+    user: getUserCookie(),
   },
   mutations: {
     changeCollapsed(state) {
@@ -22,6 +18,14 @@ export default new Vuex.Store({
     setUserInfo(state, userInfo) {
       state.user = userInfo;
     },
+    logout(state) {
+      state.user = {
+        username: '',
+        appkey: '',
+        role: '',
+        email: '',
+      };
+    },
   },
   actions: {
     changeCollapsed({ commit }) {
@@ -29,6 +33,11 @@ export default new Vuex.Store({
     },
     setUserInfo({ commit }, userInfo) {
       commit('setUserInfo', userInfo);
+      setCookie(userInfo);
+    },
+    logout({ commit }) {
+      commit('logout');
+      removeUserCookie();
     },
   },
   modules: {
