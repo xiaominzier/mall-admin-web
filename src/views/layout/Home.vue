@@ -1,6 +1,7 @@
 <template>
   <div class="home">
-    <left-menu />
+    <!-- 通过监听路由的变化，使菜单栏重新渲染，添加一个变化的属性 -->
+    <left-menu :key="key" />
     <div :class="{ 'main-app': true, 'menu-unfold': $store.state.collapsed }">
       <slider-nav />
       <router-view></router-view>
@@ -18,7 +19,14 @@ export default {
     LeftMenu,
   },
   data() {
-    return {};
+    return {
+      key: new Date().getTime(),
+    };
+  },
+  watch: {
+    $route() {
+      this.key = new Date().getTime();
+    },
   },
   methods: {},
 };

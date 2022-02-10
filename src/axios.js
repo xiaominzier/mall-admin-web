@@ -1,11 +1,21 @@
 import axios from 'axios';
+import store from './store';
 
 const instance = axios.create({
   baseURL: 'https://mallapi.duyiedu.com/',
 });
 instance.interceptors.request.use((config) => {
   console.log(config);
-  return config;
+  if (config.url.includes('/passport')) { // 如果是登录注册找回密码的接口，不需要拼接参数
+    return config;
+  } // 其他接口，需要拼接appkey，因为appkey是通用的，所以统一写在请求这里
+  return {
+    ...config,
+    params: {
+      ...config.params,
+      appkey: store.state.user.appkey,
+    },
+  };
 }, (error) => Promise.reject(error));
 instance.interceptors.response.use((response) => {
   console.log(response);
