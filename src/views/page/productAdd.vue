@@ -44,19 +44,38 @@ export default {
       ],
     };
   },
+  created() {
+    const { id } = this.$route.params;
+    if (id) {
+      // 进入编辑页面，读取商品详情
+      api.detail(id).then((res) => {
+        this.form = res;
+      });
+    }
+  },
   methods: {
     next(form) {
-      this.form = { // 把商品基本信息的内容存储到父组件中，以免回退时数据丢失
+      this.form = {
+        // 把商品基本信息的内容存储到父组件中，以免回退时数据丢失
         ...this.form,
         form,
       };
       if (this.current === 1) {
-        api.add(this.form).then(() => {
-          this.$message.success('新增成功');
-          this.$router.push({
-            name: 'ProductList',
+        if (this.$route.params.id) {
+          api.edit(this.form).then(() => {
+            this.$message.success('修改成功');
+            this.$router.push({
+              name: 'ProductList',
+            });
           });
-        });
+        } else {
+          api.add(this.form).then(() => {
+            this.$message.success('新增成功');
+            this.$router.push({
+              name: 'ProductList',
+            });
+          });
+        }
       } else {
         this.current += 1;
       }

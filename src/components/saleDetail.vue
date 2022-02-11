@@ -52,7 +52,6 @@
   </div>
 </template>
 <script>
-import categoryApi from '@/api/category';
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -83,9 +82,14 @@ export default {
   },
   props: ['form'],
   created() {
-    categoryApi.list().then((res) => {
-      this.categoryList = res.data;
-    });
+    if (this.form.images.length > 0) {
+      this.fileList = this.form.images.map((item, index) => ({
+        uid: index,
+        name: `image-${index}.png`,
+        status: 'done',
+        url: item,
+      }));
+    }
   },
   methods: {
     async handlePreview(file) {

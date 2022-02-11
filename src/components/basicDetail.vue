@@ -26,7 +26,7 @@
             >{{ c.name }}</a-select-option
           >
         </a-select>
-        <a-select v-model="form.c_items" placeholder="请选择子商品类别">
+        <a-select v-model="form.c_item" placeholder="请选择子商品类别">
           <a-select-option :value="c" v-for="c in categoryItems" :key="c">{{
             c
           }}</a-select-option>
